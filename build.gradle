@@ -1,5 +1,11 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'jacoco'
+
+}
+java {
+    sourceCompatibility = '21'
 }
 
 group = 'org.example'
@@ -9,12 +15,35 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaExec) {
+    // Это заставляет JVM использовать UTF-8 для потоков ввода-вывода
+    systemProperty "file.encoding", "UTF-8"
+    systemProperty "sun.stdout.encoding", "UTF-8"
+    systemProperty "sun.stderr.encoding", "UTF-8"
+}
+
+
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // ============ Тестирование ============
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.mockito:mockito-core:5.7.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.7.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.17.0'
 }
 
 test {
     useJUnitPlatform()
+
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
 }

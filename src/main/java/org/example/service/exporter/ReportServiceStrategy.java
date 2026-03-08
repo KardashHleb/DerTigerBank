@@ -1,7 +1,7 @@
 package org.example.service.exporter;
 
 import org.example.model.*;
-import org.example.service.ReportData;
+import org.example.service.DTO.ReportData;
 
 import java.io.IOException;
 import java.util.Collection;

@@ -1,5 +1,5 @@
 import org.example.ui.Menu;
-import org.example.ui.WelcomeScreen;
+import org.example.ui.POJO.WelcomeScreen;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;

@@ -1,0 +1,77 @@
+@startuml
+
+' Пакеты
+package "org.example" {
+    class Main {
+        +main(args: String[]): void
+    }
+}
+
+package "org.example.factory" {
+    class ApplicationFactory {
+        +{static} createBank(): Bank
+        +{static} createServices(): ServiceBundle
+        +{static} createMainMenu(): MainMenuScreen
+        +{static} createCommands(bank: Bank, io: ConsoleIO): List<MenuCommand>
+    }
+    
+    class ServiceBundle {
+        -customerService: CustomerService
+        -accountService: AccountService
+        -transactionService: TransactionService
+        -reportServiceStrategy: ReportServiceStrategy
+        -storageService: StorageService
+        +getBank(): Bank
+    }
+}
+
+package "org.example.service" {
+    class Bank {
+        +Bank(cs, as, ts, rss, ss)
+    }
+    
+    class CustomerService
+    class AccountService
+    class TransactionService
+    class ReportServiceStrategy
+    class StorageService
+}
+
+package "org.example.ui" {
+    class ConsoleIO
+    class MainMenuScreen {
+        +MainMenuScreen(commands, io)
+    }
+    
+    interface MenuCommand
+}
+
+' Связи
+Main --> ApplicationFactory : использует
+
+ApplicationFactory --> Bank : создаёт
+ApplicationFactory --> CustomerService : создаёт
+ApplicationFactory --> AccountService : создаёт
+ApplicationFactory --> TransactionService : создаёт
+ApplicationFactory --> ReportServiceStrategy : создаёт
+ApplicationFactory --> StorageService : создаёт
+ApplicationFactory --> ConsoleIO : создаёт
+ApplicationFactory --> MainMenuScreen : создаёт
+ApplicationFactory --> MenuCommand : создаёт список
+
+ServiceBundle --> CustomerService
+ServiceBundle --> AccountService
+ServiceBundle --> TransactionService
+ServiceBundle --> ReportServiceStrategy
+ServiceBundle --> StorageService
+
+Bank --> ServiceBundle : использует
+
+MainMenuScreen --> ConsoleIO
+MainMenuScreen --> MenuCommand
+
+note top of ApplicationFactory : Composition Root\nЕдиное место создания всех зависимостей
+
+note bottom of Main : Только:\n1. Приветствие\n2. Вызов фабрики\n3. Запуск меню
+
+@enduml

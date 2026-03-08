@@ -1,0 +1,29 @@
+@startuml
+abstract class BaseReportImporter {
+    +importReport(path)$
+    #validateFile()
+    #parseFile()*
+    #postProcess()
+    -logImport()
+}
+
+class JsonReportImporter
+class YamlReportImporter
+class CsvReportImporter
+
+class ImporterFactory {
+    +createImporter(path)$
+}
+
+class StorageService {
+    +loadReport(path)
+}
+
+BaseReportImporter <|-- JsonReportImporter
+BaseReportImporter <|-- YamlReportImporter
+BaseReportImporter <|-- CsvReportImporter
+
+ImporterFactory --> BaseReportImporter : создаёт
+StorageService --> ImporterFactory : использует
+StorageService --> BaseReportImporter : вызывает importReport()
+@enduml

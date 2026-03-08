@@ -2,7 +2,7 @@ package org.example.service.exporter;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.example.service.ReportData;
+import org.example.service.DTO.ReportData;
 
 import java.io.File;
 import java.io.IOException;

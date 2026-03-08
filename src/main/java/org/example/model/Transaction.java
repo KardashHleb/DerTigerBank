@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 
 public class Transaction {
 
-    public enum TransactionType {
-        DEPOSIT, WITHDRAWAL, TRANSFER
-    }
+
 
     private final String fromAccount;
     private final String toAccount;

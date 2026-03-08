@@ -1,0 +1,116 @@
+@startuml
+title Паттерн STRATEGY - Экспорт отчётов
+
+package "Контекст (Context)" {
+  class ReportServiceStrategy {
+    -exporters: Map<String, ReportExporter>
+    +registerExporter(exporter)
+    +exportReport(data, format, path)
+    +calculateReportData(customerCount, accounts)
+    +formatToText(data)
+  }
+}
+
+package "Стратегия (Strategy)" {
+  interface ReportExporter {
+    +export(data, path)
+    +getFormat(): String
+  }
+}
+
+package "Конкретные стратегии (ConcreteStrategy)" {
+  class JsonExporter {
+    -mapper: ObjectMapper
+    +export(data, path)
+    +getFormat()
+  }
+  
+  class YamlExporter {
+    -mapper: YAMLMapper
+    +export(data, path)
+    +getFormat()
+  }
+  
+  class CsvExporter {
+    -mapper: CsvMapper
+    +export(data, path)
+    +getFormat()
+  }
+}
+
+package "Модели данных" {
+  class ReportData {
+    -customerCount: int
+    -totalAccounts: int
+    -totalBalance: double
+    -debitCount: long
+    -creditCount: long
+    -totalCreditUsed: double
+    +getters/setters
+  }
+  
+  class Account {
+    +getBalance()
+  }
+  
+  class DebitAccount
+  class CreditAccount {
+    +getCreditUsed()
+  }
+}
+
+' Связи стратегии
+ReportExporter <|.. JsonExporter
+ReportExporter <|.. YamlExporter
+ReportExporter <|.. CsvExporter
+
+ReportServiceStrategy o--> "0..*" ReportExporter : содержит
+
+' Связи с данными
+ReportServiceStrategy --> ReportData : создаёт
+ReportServiceStrategy --> Account : использует для расчётов
+
+JsonExporter --> ReportData : экспортирует
+YamlExporter --> ReportData : экспортирует
+CsvExporter --> ReportData : экспортирует
+
+DebitAccount --|> Account
+CreditAccount --|> Account
+
+note right of ReportServiceStrategy
+  **КОНТЕКСТ**
+  - Хранит все доступные стратегии
+  - Выбирает нужную по формату
+  - Делегирует экспорт выбранной стратегии
+  - Считает данные для отчёта
+end note
+
+note right of ReportExporter
+  **ИНТЕРФЕЙС СТРАТЕГИИ**
+  - Единый метод export()
+  - Каждая стратегия реализует
+    свой способ экспорта
+end note
+
+note right of JsonExporter
+  **КОНКРЕТНАЯ СТРАТЕГИЯ**
+  - Экспорт в JSON
+  - Использует Jackson
+  - Формат: "json"
+end note
+
+note right of YamlExporter
+  **КОНКРЕТНАЯ СТРАТЕГИЯ**
+  - Экспорт в YAML
+  - Использует Jackson YAML
+  - Формат: "yaml"
+end note
+
+note right of CsvExporter
+  **КОНКРЕТНАЯ СТРАТЕГИЯ**
+  - Экспорт в CSV
+  - Использует Jackson CSV
+  - Формат: "csv"
+end note
+
+@enduml

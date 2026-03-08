@@ -1,0 +1,68 @@
+@startuml
+
+' Маленькие интерфейсы
+interface AccountOperations {
+    +openDebitAccount(customerId: int): String
+    +openCreditAccount(customerId: int, limit: double): String
+    +deleteAccount(accountNumber: String): boolean
+    +getAccountInfo(accountNumber: String): String
+}
+
+interface TransactionOperations {
+    +deposit(account: String, amount: double): boolean
+    +withdraw(account: String, amount: double): boolean
+    +transfer(from: String, to: String, amount: double): boolean
+}
+
+interface ReportingOperations {
+    +generateBankReport(): String
+    +exportReport(format: String, filename: String): void
+    +readReportFromFile(path: String): String
+}
+
+interface CustomerOperations {
+    +createCustomer(name: String): String
+    +getAllCustomersInfo(): String
+    +getCustomerAccountsInfo(customerId: int): String
+}
+
+' Интерфейс-фасад (объединяет все)
+interface BankService {
+}
+
+BankService -up-|> AccountOperations
+BankService -up-|> TransactionOperations
+BankService -up-|> ReportingOperations
+BankService -up-|> CustomerOperations
+
+' Реализация
+class Bank implements BankService {
+    -accountService: AccountService
+    -transactionService: TransactionService
+    -customerService: CustomerService
+    -reportService: ReportService
+}
+
+' Клиенты (команды) используют разные интерфейсы
+class OpenAccountCommand {
+    +execute(): void
+}
+
+class TransferCommand {
+    +execute(): void
+}
+
+class ReportCommand {
+    +execute(): void
+}
+
+' Связи
+OpenAccountCommand --> AccountOperations : использует
+TransferCommand --> TransactionOperations : использует
+ReportCommand --> ReportingOperations : использует
+
+note top of BankService : Интерфейс-фасад\nобъединяет 4 интерфейса
+
+note bottom of Bank : Класс Bank реализует\nодин большой интерфейс\nвместо четырёх маленьких
+
+@enduml

@@ -1,18 +1,21 @@
-package org.example.ui.commands;
+package org.example.ui.commands.impl;
 
-import org.example.service.Bank;
 import org.example.ui.ConsoleIO;
+import org.example.ui.commands.MenuCommand;
 
 public class CreateAccountMenuCommand implements MenuCommand {
     private final ConsoleIO io;
     private final OpenDebitAccountCommand debitCommand;
     private final OpenCreditAccountCommand creditCommand;
 
-    public CreateAccountMenuCommand(Bank bank, ConsoleIO io) {
+    public CreateAccountMenuCommand(ConsoleIO io,
+                                    OpenDebitAccountCommand debitCommand,
+                                    OpenCreditAccountCommand creditCommand) {
         this.io = io;
-        this.debitCommand = new OpenDebitAccountCommand(bank, io);
-        this.creditCommand = new OpenCreditAccountCommand(bank, io);
+        this.debitCommand = debitCommand;
+        this.creditCommand = creditCommand;
     }
+
 
     @Override
     public String getDescription() {

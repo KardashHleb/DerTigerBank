@@ -1,39 +1,34 @@
 package org.example.ui.commands;
 
 import org.example.service.*;
-import org.example.service.exporter.ReportServiceStrategy;
 import org.example.ui.ConsoleIO;
+import org.example.ui.commands.impl.*;
+import org.example.ui.commands.interfaces.AccountProvider;
+import org.example.ui.commands.interfaces.BankService;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainMenuScreen {
-    private final Bank bank;
+    private final BankService bank;
     private final ConsoleIO io;
     private final List<MenuCommand> commands;
+    private final AccountProvider accountProvider;
 
-    public MainMenuScreen() {
-        CustomerService customerService = new CustomerService();
-        AccountService accountService = new AccountService();
-        TransactionService transactionService = new TransactionService();
-        ReportServiceStrategy reportServiceStrategy = new ReportServiceStrategy();
-        StorageService storageService = new StorageService();
-
-        this.bank = new Bank(
-                customerService,
-                accountService,
-                transactionService,
-                reportServiceStrategy,
-                storageService
-        );
-        this.io = new ConsoleIO();
+    // Все зависимости передаются через конструктор
+    public MainMenuScreen(BankService bank,AccountProvider accountProvider, ConsoleIO io) {
+        this.bank = bank;
+        this.accountProvider = accountProvider;
+        this.io = io;
         this.commands = new ArrayList<>();
-
         initializeCommands();
     }
 
     private void initializeCommands() {
         commands.add(new CreateCustomerCommand(bank, io));
-        commands.add(new CreateAccountMenuCommand(bank, io));
+        OpenDebitAccountCommand debitCmd = new OpenDebitAccountCommand(bank, io);
+        OpenCreditAccountCommand creditCmd = new OpenCreditAccountCommand(bank, io);
+        commands.add(new CreateAccountMenuCommand(io, debitCmd, creditCmd));
         commands.add(new DepositCommand(bank, io));
         commands.add(new WithdrawCommand(bank, io));
         commands.add(new TransferCommand(bank, io));
@@ -41,7 +36,8 @@ public class MainMenuScreen {
         commands.add(new DeleteAccountCommand(bank, io));
         commands.add(new BankReportCommand(bank, io));
         commands.add(new LoadReportExtendedCommand(bank, io));
-        commands.add(new AnalyticsCommand(bank, io));
+        AnalyticsService analyticsService = new AnalyticsService(accountProvider);
+        commands.add(new AnalyticsCommand(analyticsService, io));
     }
 
     public void show() {

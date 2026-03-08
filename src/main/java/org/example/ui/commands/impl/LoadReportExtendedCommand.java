@@ -1,13 +1,15 @@
-package org.example.ui.commands;
+package org.example.ui.commands.impl;
 
-import org.example.service.Bank;
+
 import org.example.ui.ConsoleIO;
+import org.example.ui.commands.MenuCommand;
+import org.example.ui.commands.interfaces.BankService;
 
 public class LoadReportExtendedCommand implements MenuCommand {
-    private final Bank bank;
+    private final BankService bank;
     private final ConsoleIO io;
 
-    public LoadReportExtendedCommand(Bank bank, ConsoleIO io) {
+    public LoadReportExtendedCommand(BankService bank, ConsoleIO io) {
         this.bank = bank;
         this.io = io;
     }

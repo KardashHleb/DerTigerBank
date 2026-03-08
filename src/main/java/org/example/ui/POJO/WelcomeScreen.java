@@ -1,5 +1,7 @@
-package org.example.ui;
+package org.example.ui.POJO;
 
+
+import org.example.ui.Screen;
 
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;

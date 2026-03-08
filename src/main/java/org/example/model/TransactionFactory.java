@@ -8,7 +8,7 @@ public class TransactionFactory {
                 accountNumber,
                 accountNumber,
                 amount,
-                Transaction.TransactionType.DEPOSIT,
+                TransactionType.DEPOSIT,
                 success,
                 message
         );
@@ -20,7 +20,7 @@ public class TransactionFactory {
                 accountNumber,
                 accountNumber,
                 amount,
-                Transaction.TransactionType.WITHDRAWAL,
+                TransactionType.WITHDRAWAL,
                 success,
                 message
         );
@@ -32,18 +32,20 @@ public class TransactionFactory {
                 fromAccount,
                 toAccount,
                 amount,
-                Transaction.TransactionType.TRANSFER,
+                TransactionType.TRANSFER,
                 success,
                 message
         );
     }
 
     public static Transaction createSuccessDeposit(String accountNumber, double amount) {
-        return createDeposit(accountNumber, amount, true, "OK");
+        return createDeposit(accountNumber, amount, true,
+                TransactionType.DEPOSIT.getDescription());
     }
 
     public static Transaction createSuccessWithdrawal(String accountNumber, double amount) {
-        return createWithdrawal(accountNumber, amount, true, "OK");
+        return createWithdrawal(accountNumber, amount, true,
+                TransactionType.WITHDRAWAL.getDescription());
     }
 
     public static Transaction createFailedDeposit(String accountNumber, double amount,

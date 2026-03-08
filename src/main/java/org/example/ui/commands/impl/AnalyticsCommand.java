@@ -1,16 +1,17 @@
-package org.example.ui.commands;
+package org.example.ui.commands.impl;
 
 import org.example.service.AnalyticsService;
-import org.example.service.Bank;
 import org.example.ui.ConsoleIO;
+import org.example.ui.commands.MenuCommand;
+
 import java.time.LocalDate;
 
 public class AnalyticsCommand implements MenuCommand {
     private final AnalyticsService analytics;
     private final ConsoleIO io;
 
-    public AnalyticsCommand(Bank bank, ConsoleIO io) {
-        this.analytics = new AnalyticsService(bank);
+    public AnalyticsCommand(AnalyticsService analytics, ConsoleIO io) {
+        this.analytics = analytics;
         this.io = io;
     }
 

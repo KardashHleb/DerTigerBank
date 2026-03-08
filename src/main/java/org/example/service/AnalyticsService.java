@@ -2,22 +2,28 @@ package org.example.service;
 
 import org.example.model.Transaction;
 import org.example.model.Account;
+import org.example.model.TransactionType;
+import org.example.ui.commands.interfaces.AccountProvider;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
 import java.util.stream.Collectors;
 
 public class AnalyticsService {
-    private final Bank bank;
+    private final AccountProvider accountProvider;
+
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public AnalyticsService(Bank bank) {
-        this.bank = bank;
+    public AnalyticsService(AccountProvider accountProvider) {
+        this.accountProvider = accountProvider;
     }
 
     private List<Transaction> getAllTransactions() {
         List<Transaction> allTransactions = new ArrayList<>();
-        for (Account account : bank.getAllAccounts()) {
+        // Используем accountProvider вместо accountsSupplier
+        for (Account account : accountProvider.getAllAccounts()) {
             allTransactions.addAll(account.getTransactions());
         }
         return allTransactions;
@@ -36,7 +42,7 @@ public class AnalyticsService {
         List<Transaction> transactions = filterByPeriod(getAllTransactions(), start, end);
 
         return transactions.stream()
-                .filter(t -> t.getType() == Transaction.TransactionType.DEPOSIT)
+                .filter(t -> t.getType() == TransactionType.DEPOSIT)
                 .filter(Transaction::isSuccess)
                 .mapToDouble(Transaction::getAmount)
                 .sum();
@@ -46,7 +52,7 @@ public class AnalyticsService {
         List<Transaction> transactions = filterByPeriod(getAllTransactions(), start, end);
 
         return transactions.stream()
-                .filter(t -> t.getType() == Transaction.TransactionType.WITHDRAWAL)
+                .filter(t -> t.getType() == TransactionType.WITHDRAWAL)
                 .filter(Transaction::isSuccess)
                 .mapToDouble(Transaction::getAmount)
                 .sum();
@@ -79,12 +85,12 @@ public class AnalyticsService {
         }
 
         long incomeCount = filterByPeriod(getAllTransactions(), start, end).stream()
-                .filter(t -> t.getType() == Transaction.TransactionType.DEPOSIT)
+                .filter(t -> t.getType() == TransactionType.DEPOSIT)
                 .filter(Transaction::isSuccess)
                 .count();
 
         long expenseCount = filterByPeriod(getAllTransactions(), start, end).stream()
-                .filter(t -> t.getType() == Transaction.TransactionType.WITHDRAWAL)
+                .filter(t -> t.getType() == TransactionType.WITHDRAWAL)
                 .filter(Transaction::isSuccess)
                 .count();
 

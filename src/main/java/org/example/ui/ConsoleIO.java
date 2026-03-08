@@ -4,8 +4,9 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class ConsoleIO {
+public class ConsoleIO implements InputOutput  {
     private final Scanner scanner = new Scanner(System.in);
+
 
     public String getString(String message) {
         System.out.print(message);
@@ -36,6 +37,11 @@ public class ConsoleIO {
             }
         }
     }
+    @Override
+    public void printMessage(String message) {
+        System.out.println(message);  // или просто println(message)
+    }
+
     public double getDouble(String message) {
         System.out.print(message);
         while (!scanner.hasNextDouble()) {

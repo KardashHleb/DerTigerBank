@@ -1,0 +1,62 @@
+@startuml
+title Паттерн COMMAND (чистая реализация)
+
+package "Паттерн Command" {
+  
+  interface Command {
+    +execute(): void
+  }
+  
+  class ConcreteCommandA
+  class ConcreteCommandB
+  class ConcreteCommandC
+  
+  class Invoker {
+    -command: Command
+    +setCommand(c: Command)
+    +executeCommand()
+  }
+  
+  class Receiver {
+    +action1()
+    +action2()
+  }
+  
+  note top of Command
+    **Command**
+    Интерфейс, объединяющий
+    все команды
+  end note
+  
+  note right of Invoker
+    **Invoker (Инициатор)**
+    Хранит команду и вызывает её,
+    не зная, что именно она делает
+  end note
+  
+  note bottom of Receiver
+    **Receiver (Получатель)**
+    Объект, который выполняет
+    реальную работу
+  end note
+}
+
+' Связи
+Command <|.. ConcreteCommandA
+Command <|.. ConcreteCommandB
+Command <|.. ConcreteCommandC
+
+ConcreteCommandA --> Receiver : использует
+ConcreteCommandB --> Receiver : использует
+ConcreteCommandC --> Receiver : использует
+
+Invoker o--> Command : содержит
+
+note bottom of ConcreteCommandA
+  **Конкретная команда**
+  public void execute() {
+    receiver.action1();
+  }
+end note
+
+@enduml

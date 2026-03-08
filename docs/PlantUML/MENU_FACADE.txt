@@ -1,0 +1,66 @@
+plantuml
+
+@startuml
+title Фасад меню - MainMenuScreen
+
+package "Фасад меню" {
+  class MainMenuScreen {
+    -bank: Bank
+    -io: ConsoleIO
+    -commands: List<MenuCommand>
+    +show()
+    -initializeCommands()
+    -printMenu()
+  }
+}
+
+package "Паттерн КОМАНДА" {
+  interface MenuCommand {
+    +getDescription()
+    +execute()
+  }
+  
+  class CreateCustomerCommand
+  class CreateAccountMenuCommand
+  class DepositCommand
+  class WithdrawCommand
+  class TransferCommand
+  class CustomerAccountsCommand
+  class DeleteAccountCommand
+  class BankReportCommand
+  class LoadReportExtendedCommand
+  class AnalyticsCommand
+  
+  note top of MenuCommand
+    **Все команды реализуют интерфейс MenuCommand**
+    Каждая команда инкапсулирует одну операцию
+  end note
+}
+
+package "Внешние зависимости" {
+  class Bank
+  class ConsoleIO
+}
+
+' Главная связь - фасад содержит команды
+MainMenuScreen o--> "содержит" MenuCommand
+
+note right of MainMenuScreen
+  **ФАСАД**
+  
+  Что делает MainMenuScreen:
+  
+  1. Создает Bank и все сервисы
+  2. Создает ConsoleIO для ввода/вывода
+  3. Создает и инициализирует все команды
+  4. Хранит список команд
+  5. Управляет навигацией по меню
+  6. Обрабатывает ввод пользователя
+  7. Вызывает команды по выбору
+  8. Управляет циклом программы
+  
+  Результат:
+  Весь UI скрыт за одним методом show()
+end note
+
+@enduml

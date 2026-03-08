@@ -1,0 +1,80 @@
+@startuml
+title Банковская система - Код Bank.java
+
+package "Сервисный слой" {
+  class CustomerService {
+    +createCustomer()
+    +findById()
+    +getAllCustomers()
+  }
+  
+  class AccountService {
+    +openDebitAccount()
+    +openCreditAccount()
+    +findByNumber()
+    +getAllAccounts()
+  }
+  
+  class TransactionService {
+    +deposit()
+    +withdraw()
+    +transfer()
+  }
+  
+  class ReportServiceStrategy {
+    +exportReport()
+    +calculateReportData()
+    +formatToText()
+  }
+  
+  class StorageService {
+    +loadReport()
+  }
+  
+  class AnalyticsService {
+    +getTotalIncome(start, end)
+    +getTotalExpense(start, end)
+    +generateReport(start, end)
+  }
+}
+
+
+
+package "Фасад" {
+  class Bank {
+    -customerService
+    -accountService
+    -transactionService
+    -reportServiceStrategy
+    -storageService
+    -analyticsService
+    +createCustomer()
+    +getCustomers()
+    +openDebitAccount()
+    +openCreditAccount()
+    +getCustomerAccounts()
+    +getAllAccounts()
+    +findAccount()
+    +deleteAccount()
+    +deposit()
+    +withdraw()
+    +transfer()
+    +generateBankReport()
+    +exportReport()
+    +readReportFromFile()
+    +getTotalIncome()
+    +getTotalExpense()
+    +generateAnalyticsReport()
+  }
+}
+
+
+' Связи фасада с сервисами
+Bank --> CustomerService
+Bank --> AccountService
+Bank --> TransactionService
+Bank --> ReportServiceStrategy
+Bank --> StorageService
+Bank --> AnalyticsService
+
+@enduml

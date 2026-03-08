@@ -1,0 +1,79 @@
+@startuml
+title Transaction Factory - Детальная схема
+
+skinparam class {
+  BackgroundColor White
+  BorderColor Black
+  ArrowColor Black
+}
+
+class Transaction {
+  -fromAccount: String
+  -toAccount: String
+  -amount: double
+  -type: TransactionType
+  -success: boolean
+  -message: String
+  -timestamp: LocalDateTime
+  --
+  +getFromAccount(): String
+  +getToAccount(): String
+  +getAmount(): double
+  +getType(): TransactionType
+  +isSuccess(): boolean
+  +getMessage(): String
+  +getTimestamp(): LocalDateTime
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  TRANSFER
+}
+
+class TransactionFactory {
+  {static} createDeposit(account, amount, success, message)$
+  {static} createWithdrawal(account, amount, success, message)$
+  {static} createTransfer(from, to, amount, success, message)$
+  --
+  {static} createSuccessDeposit(account, amount)$
+  {static} createSuccessWithdrawal(account, amount)$
+  {static} createFailedDeposit(account, amount, reason)$
+  {static} createFailedWithdrawal(account, amount, reason)$
+}
+
+' Группировка методов фабрики
+note right of TransactionFactory
+  === Базовые методы ===
+  • createDeposit()
+  • createWithdrawal()
+  • createTransfer()
+  
+  === Успешные операции ===
+  • createSuccessDeposit()
+  • createSuccessWithdrawal()
+  
+  === Ошибочные операции ===
+  • createFailedDeposit()
+  • createFailedWithdrawal()
+end note
+
+' Связи
+Transaction *-- TransactionType
+TransactionFactory ..> Transaction : <<create>>
+
+' Пример использования
+note bottom of TransactionFactory
+  Пример:
+  Transaction t = TransactionFactory
+      .createSuccessDeposit("ACC-123", 1000.0);
+      
+  Результат:
+  - from: "ACC-123"
+  - to: "ACC-123"
+  - type: DEPOSIT
+  - success: true
+  - message: "OK"
+end note
+
+@enduml

@@ -2,7 +2,7 @@ package org.example.service.exporter;
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import org.example.service.ReportData;
+import org.example.service.DTO.ReportData;
 
 import java.io.File;
 import java.io.IOException;
